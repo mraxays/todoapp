@@ -198,12 +198,13 @@ body {
 }
 
 .add-btn,
-.clear-completed-btn {
-    padding: 1rem 2rem;
+.clear-completed-btn,
+.install-btn {
+    padding: 0.7rem 1rem;
     background: var(--gradient-1);
     color: white;
     border: none;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: bold;
@@ -217,8 +218,15 @@ body {
     background: var(--gradient-2);
 }
 
+.install-btn {
+    display: none;
+    margin: 1rem auto ;
+    background: var(--gradient-1);
+}
+
 .add-btn:hover,
-.clear-completed-btn:hover {
+.clear-completed-btn:hover,
+.install-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
 }
@@ -411,6 +419,38 @@ body {
     color: var(--text-color);
 }
 
+/* Drag and drop styles */
+.todo-item.sortable-ghost {
+    opacity: 0.4;
+    background: var(--primary-color);
+}
+
+.todo-item.sortable-drag {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+/* Copyright styles */
+.copyright {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--bg-color);
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.copyright a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.copyright a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
     .container {
@@ -434,15 +474,4 @@ body {
         flex-wrap: wrap;
         gap: 1rem;
     }
-}
-
-/* Drag and drop styles */
-.todo-item.sortable-ghost {
-    opacity: 0.4;
-    background: var(--primary-color);
-}
-
-.todo-item.sortable-drag {
-    opacity: 0.8;
-    transform: scale(1.05);
 }
