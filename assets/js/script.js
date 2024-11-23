@@ -73,6 +73,12 @@ function scheduleNotification(todo) {
     const now = new Date();
     const style = getNotificationStyle(todo.priority);
 
+    // Show notification when alarm is set
+    showNotification(
+        `${style.emoji} Alarm Set!`,
+        `Reminder set for "${todo.text}" on ${dueDate.toLocaleString()}`
+    );
+
     // Schedule 1-minute reminder
     const oneMinuteBefore = new Date(dueDate.getTime() - 60000);
     if (oneMinuteBefore > now) {
@@ -80,7 +86,7 @@ function scheduleNotification(todo) {
             if (!todo.completed) {
                 new Notification(`${style.emoji} ${style.tone} Task Due Soon!`, {
                     body: `"${todo.text}" is due in 1 minute!`,
-                    icon: "/path/to/icon.png",
+                    icon: "assets/img/favicon/icon-512x512.png",
                 });
             }
         }, oneMinuteBefore - now);
@@ -92,21 +98,34 @@ function scheduleNotification(todo) {
             if (!todo.completed) {
                 new Notification(`${style.emoji} Task Due Now!`, {
                     body: `"${todo.text}" is due now!`,
-                    icon: "/path/to/icon.png",
+                    icon: "assets/img/favicon/icon-512x512.png",
                 });
             }
         }, dueDate - now);
     }
 
-    // Check for overdue tasks every 5 minutes
-    setInterval(() => {
+    // Check for overdue tasks immediately when due date passes
+    const checkOverdue = () => {
         if (!todo.completed && new Date() > dueDate) {
             new Notification(`⚠️ Overdue Task!`, {
                 body: `"${todo.text}" is overdue! Please take action.`,
-                icon: "/path/to/icon.png",
+                icon: "assets/img/favicon/icon-512x512.png",
             });
         }
-    }, 300000); // 5 minutes = 300000 milliseconds
+    };
+
+    // Set timeout to check overdue status when due date passes
+    if (dueDate > now) {
+        setTimeout(() => {
+            checkOverdue();
+            // After first overdue notification, check every 5 minutes
+            setInterval(checkOverdue, 300000);
+        }, dueDate - now);
+    } else {
+        // If already overdue, start checking immediately
+        checkOverdue();
+        setInterval(checkOverdue, 300000);
+    }
 }
 
 function showNotification(title, body) {
