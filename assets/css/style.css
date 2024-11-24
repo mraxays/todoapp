@@ -160,9 +160,8 @@ body {
     flex-wrap: wrap;
 }
 
-#todoInput,
-#timerInput,
-#prioritySelect {
+#todoInput
+{
     flex: 100%;
     padding: 1rem;
     border: 2px solid rgba(0, 0, 0, 0.1);
@@ -473,5 +472,8 @@ body {
     .stats-container {
         flex-wrap: wrap;
         gap: 1rem;
+    }
+    .todo-item{
+        padding: 0.6rem 0.2rem ;
     }
 }
