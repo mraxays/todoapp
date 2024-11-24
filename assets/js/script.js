@@ -79,52 +79,40 @@ function scheduleNotification(todo) {
         `Reminder set for "${todo.text}" on ${dueDate.toLocaleString()}`
     );
 
-    // Schedule 1-minute reminder
-    const oneMinuteBefore = new Date(dueDate.getTime() - 60000);
-    if (oneMinuteBefore > now) {
-        setTimeout(() => {
-            if (!todo.completed) {
-                new Notification(`${style.emoji} ${style.tone} Task Due Soon!`, {
+    // Schedule notifications using service worker
+    if ('serviceWorker' in navigator && 'Notification' in window) {
+        navigator.serviceWorker.ready.then(registration => {
+            // Schedule 1-minute reminder
+            const oneMinuteBefore = new Date(dueDate.getTime() - 60000);
+            if (oneMinuteBefore > now) {
+                registration.showNotification(`${style.emoji} ${style.tone} Task Due Soon!`, {
                     body: `"${todo.text}" is due in 1 minute!`,
                     icon: "assets/img/favicon/icon-512x512.png",
+                    tag: `reminder-${todo.timestamp}-1min`,
+                    vibrate: [200, 100, 200]
                 });
             }
-        }, oneMinuteBefore - now);
-    }
 
-    // Schedule due time notification
-    if (dueDate > now) {
-        setTimeout(() => {
-            if (!todo.completed) {
-                new Notification(`${style.emoji} Task Due Now!`, {
+            // Schedule due time notification
+            if (dueDate > now) {
+                registration.showNotification(`${style.emoji} Task Due Now!`, {
                     body: `"${todo.text}" is due now!`,
                     icon: "assets/img/favicon/icon-512x512.png",
+                    tag: `reminder-${todo.timestamp}-due`,
+                    vibrate: [200, 100, 200]
                 });
             }
-        }, dueDate - now);
-    }
 
-    // Check for overdue tasks immediately when due date passes
-    const checkOverdue = () => {
-        if (!todo.completed && new Date() > dueDate) {
-            new Notification(`⚠️ Overdue Task!`, {
-                body: `"${todo.text}" is overdue! Please take action.`,
-                icon: "assets/img/favicon/icon-512x512.png",
-            });
-        }
-    };
-
-    // Set timeout to check overdue status when due date passes
-    if (dueDate > now) {
-        setTimeout(() => {
-            checkOverdue();
-            // After first overdue notification, check every 5 minutes
-            setInterval(checkOverdue, 300000);
-        }, dueDate - now);
-    } else {
-        // If already overdue, start checking immediately
-        checkOverdue();
-        setInterval(checkOverdue, 300000);
+            // Check for overdue tasks
+            if (new Date() > dueDate) {
+                registration.showNotification(`⚠️ Overdue Task!`, {
+                    body: `"${todo.text}" is overdue! Please take action.`,
+                    icon: "assets/img/favicon/icon-512x512.png",
+                    tag: `reminder-${todo.timestamp}-overdue`,
+                    vibrate: [200, 100, 200]
+                });
+            }
+        });
     }
 }
 
