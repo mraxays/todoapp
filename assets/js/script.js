@@ -2,6 +2,11 @@ let todos = JSON.parse(localStorage.getItem("todos")) || [];
 let notificationPermission = false;
 document.getElementById("year").textContent = new Date().getFullYear();
 
+// Create audio elements for notifications
+const addSound = new Audio('assets/sounds/add.wav');
+const completeSound = new Audio('assets/sounds/complete.mp3'); 
+const dueSound = new Audio('assets/sounds/alert.mp3');
+const overdueSound = new Audio('assets/sounds/alert.mp3');
 
 if ("Notification" in window) {
   Notification.requestPermission().then(function (permission) {
@@ -97,6 +102,7 @@ function scheduleNotification(todo) {
             renotify: true
           }
         );
+        dueSound.play();
       }
 
       // Schedule due time notification 
@@ -108,6 +114,7 @@ function scheduleNotification(todo) {
           vibrate: [200, 100, 200],
           renotify: true
         });
+        dueSound.play();
       }
 
       // Check for overdue tasks - only show if not completed
@@ -119,6 +126,7 @@ function scheduleNotification(todo) {
           vibrate: [200, 100, 200],
           renotify: true
         });
+        overdueSound.play();
       }
     }).catch(err => {
       console.error('Error scheduling notification:', err);
@@ -244,6 +252,9 @@ function renderTodos() {
         }${hours}h ${minutes}m</span>`;
       } else {
         timerText = '<span class="timer-text">⚠️ Overdue!</span>';
+        if (!todo.completed) {
+          overdueSound.play();
+        }
       }
     }
 
@@ -322,6 +333,7 @@ function addTodo() {
       `${style.emoji} Task Added!`,
       `New ${priority} priority task: ${text}`
     );
+    addSound.play();
 
     if (dueDate) {
       scheduleNotification(todo);
@@ -356,6 +368,7 @@ function toggleTodo(index) {
       `${style.emoji} Task Completed!`,
       `Great job completing: ${todo.text}`
     );
+    completeSound.play();
   }
   saveTodos();
   renderTodos();
