@@ -4,7 +4,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 // Create audio elements for notifications
 const addSound = new Audio('assets/sounds/add.wav');
-const completeSound = new Audio('assets/sounds/complete.mp3'); 
+const completeSound = new Audio('assets/sounds/complete.mp3');
 const dueSound = new Audio('assets/sounds/alert.mp3');
 const overdueSound = new Audio('assets/sounds/alert.mp3');
 
@@ -12,8 +12,8 @@ const overdueSound = new Audio('assets/sounds/alert.mp3');
 if ("Notification" in window) {
   Notification.requestPermission().then(function (permission) {
     notificationPermission = permission === "granted";
-  }).catch(err => {
-    console.error('Error requesting notification permission:', err);
+  }).catch((err) => {
+    console.error("Error requesting notification permission:", err);
   });
 }
 
@@ -28,9 +28,8 @@ if (todoList) {
       const movedItem = todos[evt.oldIndex];
       todos.splice(evt.oldIndex, 1);
       todos.splice(evt.newIndex, 0, movedItem);
-
-      // Update array order in localStorage
       saveTodos();
+      renderTodos();
     },
   });
 }
@@ -53,7 +52,7 @@ function getNotificationStyle(priority) {
       color: "#2ecc71",
     },
   };
-  return styles[priority] || styles.low; // Default to low priority style
+  return styles[priority] || styles.low;
 }
 
 function scheduleNotification(todo) {
@@ -69,99 +68,91 @@ function scheduleNotification(todo) {
     `Reminder set for "${todo.text}" on ${dueDate.toLocaleString()}`
   );
 
-  // Schedule notifications using service worker
-  if ("serviceWorker" in navigator && "Notification" in window) {
-    navigator.serviceWorker.ready.then((registration) => {
-      // Schedule 1-minute reminder
-      const oneMinuteBefore = new Date(dueDate.getTime() - 60000);
-      if (oneMinuteBefore > now) {
-        const oneMinTimer = setTimeout(() => {
-          if (!todo.completed) {
-            new Notification(`${style.emoji} ${style.tone} Task Due Soon!`, {
-              body: `"${todo.text}" is due in 1 minute!`,
-              icon: "assets/img/favicon/icon-512x512.png",
-              tag: `reminder-${todo.timestamp}-1min`,
-              vibrate: [200, 100, 200],
-              renotify: true,
-              silent: false
-            });
-            
-            try {
-              dueSound.play().catch(() => {}); // Ignore autoplay restrictions
-            } catch (err) {
-              console.warn('Sound play error:', err);
-            }
-          }
-        }, oneMinuteBefore - now);
-
-        // Store timer reference to clear if task completed
-        todo.oneMinTimer = oneMinTimer;
-      }
-
-      // Schedule due time notification 
-      if (dueDate > now) {
-        const dueTimer = setTimeout(() => {
-          if (!todo.completed) {
-            new Notification(`${style.emoji} Task Due Now!`, {
-              body: `"${todo.text}" is due now!`,
-              icon: "assets/img/favicon/icon-512x512.png", 
-              tag: `reminder-${todo.timestamp}-due`,
-              vibrate: [200, 100, 200],
-              renotify: true,
-              silent: false
-            });
-
-            try {
-              dueSound.play().catch(() => {});
-            } catch (err) {
-              console.warn('Sound play error:', err);
-            }
-          }
-        }, dueDate - now);
-
-        // Store timer reference
-        todo.dueTimer = dueTimer;
-      }
-
-      // Check for overdue tasks - only show if not completed
-      const checkOverdue = setInterval(() => {
-        if (new Date() > dueDate && !todo.completed) {
-          new Notification(`⚠️ Overdue Task!`, {
-            body: `"${todo.text}" is overdue! Please take action.`,
+  // Schedule notifications
+  if ("Notification" in window) {
+    // Schedule 1-minute reminder
+    const oneMinuteBefore = new Date(dueDate.getTime() - 60000);
+    if (oneMinuteBefore > now) {
+      const oneMinTimer = setTimeout(() => {
+        if (!todo.completed) {
+          new Notification(`${style.emoji} ${style.tone} Task Due Soon!`, {
+            body: `"${todo.text}" is due in 1 minute!`,
             icon: "assets/img/favicon/icon-512x512.png",
-            tag: `reminder-${todo.timestamp}-overdue`,
+            tag: `reminder-${todo.timestamp}-1min`,
             vibrate: [200, 100, 200],
             renotify: true,
             silent: false
           });
 
           try {
-            overdueSound.play().catch(() => {});
+            dueSound.play().catch(() => {});
           } catch (err) {
             console.warn('Sound play error:', err);
           }
-
-          clearInterval(checkOverdue);
         }
-      }, 60000); // Check every minute
+      }, oneMinuteBefore - now);
 
-      // Store interval reference
-      todo.overdueInterval = checkOverdue;
-    }).catch(err => {
-      console.error('Error scheduling notification:', err);
-    });
+      todo.oneMinTimer = oneMinTimer;
+    }
+
+    // Schedule due time notification  
+    if (dueDate > now) {
+      const dueTimer = setTimeout(() => {
+        if (!todo.completed) {
+          new Notification(`${style.emoji} Task Due Now!`, {
+            body: `"${todo.text}" is due now!`,
+            icon: "assets/img/favicon/icon-512x512.png",
+            tag: `reminder-${todo.timestamp}-due`,
+            vibrate: [200, 100, 200],
+            renotify: true,
+            silent: false
+          });
+
+          try {
+            dueSound.play().catch(() => {});
+          } catch (err) {
+            console.warn('Sound play error:', err);
+          }
+        }
+      }, dueDate - now);
+
+      todo.dueTimer = dueTimer;
+    }
+
+    // Check for overdue tasks
+    const checkOverdue = setInterval(() => {
+      if (new Date() > dueDate && !todo.completed) {
+        new Notification(`⚠️ Overdue Task!`, {
+          body: `"${todo.text}" is overdue! Please take action.`,
+          icon: "assets/img/favicon/icon-512x512.png", 
+          tag: `reminder-${todo.timestamp}-overdue`,
+          vibrate: [200, 100, 200],
+          renotify: true,
+          silent: false
+        });
+
+        try {
+          overdueSound.play().catch(() => {});
+        } catch (err) {
+          console.warn('Sound play error:', err);
+        }
+
+        clearInterval(checkOverdue);
+      }
+    }, 60000);
+
+    todo.overdueInterval = checkOverdue;
   }
 }
 
 function showNotification(title, body) {
   if (!title || !body) return;
-  
+
   const notification = document.createElement("div");
   notification.className = "notification";
   notification.innerHTML = `<strong>${escapeHtml(title)}</strong><br>${escapeHtml(body)}`;
   document.body.appendChild(notification);
 
-  // Use requestAnimationFrame for smoother animations
   requestAnimationFrame(() => {
     notification.classList.add("show");
   });
@@ -192,13 +183,12 @@ function updateStats() {
     completedText: document.getElementById("completedText")
   };
 
-  // Safely update elements if they exist
   if (elements.totalTasks) elements.totalTasks.textContent = totalTasks;
   if (elements.completedTasks) elements.completedTasks.textContent = completedTasks;
   if (elements.pendingTasks) elements.pendingTasks.textContent = pendingTasks;
 
   const progress = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
-  
+
   if (elements.progressBar) {
     elements.progressBar.style.width = `${progress}%`;
   }
@@ -250,7 +240,6 @@ function renderTodos() {
     return new Date(a.dueDate) - new Date(b.dueDate);
   });
 
-  // Update the main todos array with sorted order
   todos = sortedTodos;
 
   todos.forEach((todo, index) => {
@@ -261,7 +250,7 @@ function renderTodos() {
 
     let timerText = "";
     let timerInterval;
-    
+
     if (todo.dueDate) {
       const updateTimer = () => {
         const timeLeft = new Date(todo.dueDate) - new Date();
@@ -270,7 +259,7 @@ function renderTodos() {
           clearInterval(timerInterval);
           return;
         }
-        
+
         if (timeLeft > 0) {
           const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
           const hours = Math.floor(
@@ -349,7 +338,7 @@ function escapeHtml(unsafe) {
 function editTodo(index) {
   const todo = todos[index];
   if (!todo) return;
-  
+
   const newText = prompt("Edit task:", todo.text);
   if (newText !== null && newText.trim() !== "") {
     todo.text = newText.trim();
@@ -363,7 +352,7 @@ function addTodo() {
   const input = document.getElementById("todoInput");
   const timerInput = document.getElementById("timerInput");
   const prioritySelect = document.getElementById("prioritySelect");
-  
+
   if (!input || !timerInput || !prioritySelect) return;
 
   const text = input.value.trim();
@@ -390,7 +379,7 @@ function addTodo() {
       `${style.emoji} Task Added!`,
       `New ${priority} priority task: ${text}`
     );
-    
+
     try {
       addSound.play().catch(() => {});
     } catch (err) {
@@ -425,7 +414,6 @@ function toggleTodo(index) {
 
   todo.completed = !todo.completed;
 
-  // Clear notification timers if task completed
   if (todo.completed) {
     if (todo.oneMinTimer) clearTimeout(todo.oneMinTimer);
     if (todo.dueTimer) clearTimeout(todo.dueTimer);
@@ -452,7 +440,6 @@ function deleteTodo(index) {
   const todo = todos[index];
   if (!todo) return;
 
-  // Clear notification timers when deleting
   if (todo.oneMinTimer) clearTimeout(todo.oneMinTimer);
   if (todo.dueTimer) clearTimeout(todo.dueTimer);
   if (todo.overdueInterval) clearInterval(todo.overdueInterval);
@@ -485,8 +472,7 @@ function clearCompletedTasks() {
     return;
   }
 
-  // Clear notification timers for completed tasks
-  completedTasks.forEach(todo => {
+  completedTasks.forEach((todo) => {
     if (todo.oneMinTimer) clearTimeout(todo.oneMinTimer);
     if (todo.dueTimer) clearTimeout(todo.dueTimer);
     if (todo.overdueInterval) clearInterval(todo.overdueInterval);
@@ -516,11 +502,11 @@ function toggleTheme() {
 
   const theme = root.getAttribute("data-theme") || "light";
   root.style.transition = "all 0.5s ease";
-  
+
   const newTheme = theme === "dark" ? "light" : "dark";
   root.setAttribute("data-theme", newTheme);
   localStorage.setItem("theme", newTheme);
-  
+
   showNotification(
     `Theme Changed! ${newTheme === "light" ? "🌞" : "🌙"}`,
     `Switched to ${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} Mode`
@@ -531,17 +517,15 @@ function toggleTheme() {
   const savedTheme = localStorage.getItem("theme") || "light";
   const root = document.documentElement;
   const themeSwitch = document.getElementById("themeSwitch");
-  
+
   if (root) root.setAttribute("data-theme", savedTheme);
   if (themeSwitch) themeSwitch.checked = savedTheme === "dark";
 })();
 
-// Check for due tasks and update UI every minute
 let updateInterval = setInterval(() => {
   renderTodos();
 }, 60000);
 
-// Initialize todos and notifications
 renderTodos();
 todos.forEach((todo) => {
   if (todo.dueDate) {
@@ -592,6 +576,6 @@ document.addEventListener("visibilitychange", () => {
     updateInterval = setInterval(() => {
       renderTodos();
     }, 60000);
-    renderTodos(); // Refresh immediately when tab becomes visible
+    renderTodos();
   }
 });
