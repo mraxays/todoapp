@@ -1,6 +1,6 @@
-# Task Master Pro
+# Dezr List
 
-Task Master Pro is a powerful and beautiful task management application designed to help you organize your daily tasks, set reminders, and boost productivity. With an intuitive interface and various features, it makes task management easy and efficient.
+Dezr List is a powerful and beautiful task management application designed to help you organize your daily tasks, set reminders, and boost productivity. With an intuitive interface and various features, it makes task management easy and efficient.
 
 ## Features
 
