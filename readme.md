@@ -1,3 +1,6 @@
+![License](https://img.shields.io/badge/License-MIT-ff932e)
+![Release](https://img.shields.io/github/v/release/MrAkshayAS/todoapp?color=ff7a5e)
+
 # Dezr List
 
 **Dezr List** is a powerful and intuitive task management application designed to help you stay organized and productive. Whether you're managing daily tasks, setting reminders, or tracking your progress, Dezr List provides all the tools you need to manage your tasks effectively.
