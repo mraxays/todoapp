@@ -5,6 +5,8 @@
 
 **Dezr List** is a powerful and intuitive task management application designed to help you stay organized and productive. Whether you're managing daily tasks, setting reminders, or tracking your progress, Dezr List provides all the tools you need to manage your tasks effectively.
 
+### [Live preview](https://repo.auss.in/todoapp/) or [Live preview](https://todo.dzr.app/)
+
 ## Features
 
 - **Task Management**: Add, edit, toggle, and delete tasks easily.
