@@ -7,6 +7,8 @@
 
 ### [Live preview](https://repo.auss.in/todoapp/) or [Live preview](https://todo.dzr.app/)
 
+![image](https://github.com/user-attachments/assets/2184b6c2-e1b2-46d8-a8e4-81bf558c139f)
+
 ## Features
 
 - **Task Management**: Add, edit, toggle, and delete tasks easily.
