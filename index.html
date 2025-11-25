@@ -2,92 +2,93 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="DezrList  - A powerful and beautiful task management app to organize your daily tasks, set reminders, and boost productivity">
-    <meta name="keywords"
-        content="task management, todo list, productivity app, task organizer, time management, reminders">
-    <meta name="author" content="DezrList ">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="DezrList  - Beautiful Task Management">
-    <meta property="og:description"
-        content="Organize your tasks beautifully with DezrList . Set reminders, track progress, and boost productivity.">
-    <meta property="og:image" content="https://todo.dzr.app/assets/img/desktop.png">
-    <meta property="og:url" content="todo.dzr.app">
-    <meta name="twitter:title" content="DezrList  - Beautiful Task Management">
-    <meta name="twitter:description"
-        content="Organize your tasks beautifully with DezrList . Set reminders, track progress, and boost productivity.">
-    <title>DezrList - Beautiful Task Management & Productivity App</title>
-    <link rel="icon" href="assets/img/favicon/favicon.ico">
-    <link rel="icon" href="assets/img/favicon//favicon-16x16.png" sizes="16x16" type="image/png">
-    <link rel="icon" href="assets/img/favicon//favicon-32x32.png" sizes="32x32" type="image/png">
-    <link rel="canonical" href="todo.dzr.app">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css" />
-    <link rel="manifest" href="/assets/manifest.json">
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="DezrList  - A powerful and beautiful task management app to organize your daily tasks, set reminders, and boost productivity">
+  <meta name="keywords"
+    content="task management, todo list, productivity app, task organizer, time management, reminders">
+  <meta name="author" content="DezrList ">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="DezrList  - Beautiful Task Management">
+  <meta property="og:description"
+    content="Organize your tasks beautifully with DezrList . Set reminders, track progress, and boost productivity.">
+  <meta property="og:image" content="https://todo.dzr.app/assets/img/desktop.png">
+  <meta property="og:url" content="todo.dzr.app">
+  <meta name="twitter:title" content="DezrList  - Beautiful Task Management">
+  <meta name="twitter:description"
+    content="Organize your tasks beautifully with DezrList . Set reminders, track progress, and boost productivity.">
+  <title>DezrList - Beautiful Task Management & Productivity App</title>
+  <link rel="icon" href="assets/img/favicon/favicon.ico">
+  <link rel="icon" href="assets/img/favicon//favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="icon" href="assets/img/favicon//favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="canonical" href="todo.dzr.app">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css" />
+  <link rel="manifest" href="/assets/manifest.json">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
-    <div class="container">
-        <h1 class="app-title"><i class="ri-list-check-3"></i>Dezr List</h1>
+  <div class="container">
+    <h1 class="app-title"><i class="ri-list-check-3"></i>Dezr List</h1>
 
-        <!-- Theme Toggle -->
-        <div class="theme-toggle">
-            <input type="checkbox" id="themeSwitch" onclick="toggleTheme()">
-            <label for="themeSwitch">
-                <i class="ri-moon-clear-fill"></i> Switch
-            </label>
-        </div>
-
-        <!-- Stats Section -->
-        <div class="stats-container">
-            <div class="stat-item">
-                <div class="stat-value" id="totalTasks">0</div>
-                <div class="stat-label">Total Tasks</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="completedTasks">0</div>
-                <div class="stat-label">Completed</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="pendingTasks">0</div>
-                <div class="stat-label">Pending</div>
-            </div>
-        </div>
-
-        <div class="input-section">
-            <input type="text" id="todoInput" placeholder="✨ What's your next amazing task?" autofocus autocomplete="off">
-            <input type="datetime-local" id="timerInput">
-            <select id="prioritySelect">
-                <option value="low">Low Priority</option>
-                <option value="medium">Medium Priority</option>
-                <option value="high">High Priority</option>
-            </select>
-            <button class="add-btn" onclick="addTodo()"><i class="ri-add-large-fill"></i> Add Task</button>
-            <button class="clear-completed-btn" onclick="clearCompletedTasks()">
-                <i class="ri-delete-bin-6-line"></i> Clear Completed Tasks
-            </button>
-        </div>
-
-        <div class="progress-bar" id="progressBar">
-            <div class="progress-text" id="progressText">0% Complete</div>
-            <div class="completed-text" id="completedText">0 <i class="ri-checkbox-circle-fill"></i></div>
-        </div>
-        <ul class="todo-list" id="todoList"></ul>
-
-        <div class="divide"></div>
-        <!-- Install PWA Button -->
-        <button class="install-btn" id="installBtn">
-            <i class="ri-download-cloud-2-line"></i> Install App
-        </button>
-        <!-- Copyright Section -->
-        <div class="copyright">
-            <i class="ri-copyright-line"></i> <span id="year"></span> <a href="https://co.dzr.app/"> CoDezinr</a> |
-            <a href="https://github.com/mraxays" target="_blank"><i class="ri-github-fill"></i> GitHub</a>
-        </div>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+      <input type="checkbox" id="themeSwitch" onclick="toggleTheme()">
+      <label for="themeSwitch">
+        <i class="ri-moon-clear-fill"></i> Switch
+      </label>
     </div>
-    <script src="assets/js/library/sortable.min.js"></script>
-    <script src="assets/js/script.js"></script>
+
+    <!-- Stats Section -->
+    <div class="stats-container">
+      <div class="stat-item">
+        <div class="stat-value" id="totalTasks">0</div>
+        <div class="stat-label">Total Tasks</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="completedTasks">0</div>
+        <div class="stat-label">Completed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="pendingTasks">0</div>
+        <div class="stat-label">Pending</div>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <input type="text" id="todoInput" placeholder="✨ What's your next amazing task?" autofocus autocomplete="off">
+      <input type="datetime-local" id="timerInput">
+      <select id="prioritySelect">
+        <option value="low">Low Priority</option>
+        <option value="medium">Medium Priority</option>
+        <option value="high">High Priority</option>
+      </select>
+      <button class="add-btn" onclick="addTodo()"><i class="ri-add-large-fill"></i> Add Task</button>
+      <button class="clear-completed-btn" onclick="clearCompletedTasks()">
+        <i class="ri-delete-bin-6-line"></i> Clear Completed Tasks
+      </button>
+    </div>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-text" id="progressText">0% Complete</div>
+      <div class="completed-text" id="completedText">0 <i class="ri-checkbox-circle-fill"></i></div>
+    </div>
+    <ul class="todo-list" id="todoList"></ul>
+
+    <div class="divide"></div>
+    <!-- Install PWA Button -->
+    <button class="install-btn" id="installBtn">
+      <i class="ri-download-cloud-2-line"></i> Install App
+    </button>
+    <!-- Copyright Section -->
+    <div class="copyright">
+      <i class="ri-copyright-line"></i> <span id="year"></span> <a href="https://co.auss.in/"> CoDezinr</a> |
+      <a href="https://github.com/mraxays" target="_blank"><i class="ri-github-fill"></i> GitHub</a>
+    </div>
+  </div>
+  <script src="assets/js/library/sortable.min.js"></script>
+  <script src="assets/js/script.js"></script>
 </body>
+
 </html>
